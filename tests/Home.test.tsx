@@ -59,6 +59,22 @@ describe('Home component useNavigate', () => {
         wrapper.find('button').simulate('click');
     })
 
+    it('should call navigate on button click, mocking the import differently ', () => {
+        const mockedUsedNavigate = jest.fn();
+
+        jest.mock('react-router-dom', () => ({
+           ...jest.requireActual('react-router-dom') as any,
+          useNavigate: () => mockedUsedNavigate,
+        }));
+
+        const wrapper = shallow(<Home />);
+
+        wrapper.update()
+
+        wrapper.find('button').simulate('click');
+        expect(mockedUsedNavigate).toHaveBeenCalledTimes(1);
+    })
+
     it('should call navigate on button click, mocking with Object.defineProperty', () => {
         Object.defineProperty(ReactRouterDom, 'useNavigate', {
             configurable: true,
